@@ -1548,3 +1548,6 @@ textarea.form-control {
 .state-label::before, .district-label::before {
     display: none;
 }
+/* Fixed Sidebar Override */
+.dashboard-sidebar { position: fixed !important; top: 0 !important; left: 0 !important; height: 100vh !important; width: 260px !important; background-color: #111827 !important; padding: 0 !important; z-index: 1030 !important; display: flex !important; flex-direction: column !important; }
+.dashboard-main { margin-left: 260px !important; }

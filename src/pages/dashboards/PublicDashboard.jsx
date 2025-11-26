@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PublicNavbar from './public/PublicNavbar';
+import PublicSidebar from './public/PublicSidebar';
 import PublicHome from './public/PublicHome';
 import PublicAllProjects from './public/PublicAllProjects';
 import PublicComplaint from './public/PublicComplaint';
@@ -21,13 +21,11 @@ const PublicDashboard = () => {
     };
 
     return (
-        <div className="page-wrapper">
-            <PublicNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className="dashboard-layout">
+            <PublicSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <div className="page-content">
-                <div className="container" style={{ marginTop: 'var(--space-6)' }}>
-                    {renderContent()}
-                </div>
+            <div className="dashboard-main" style={{ marginLeft: '260px' }}>
+                {renderContent()}
             </div>
         </div>
     );
