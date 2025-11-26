@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const HelpSupport = () => {
+const DepartmentHelp = () => {
     const [formData, setFormData] = useState({
         subject: '',
         category: 'Technical Issue',
@@ -10,8 +10,7 @@ const HelpSupport = () => {
         phone: ''
     });
     const [tickets, setTickets] = useState([
-        { id: 1, subject: 'Unable to allocate funds', category: 'Technical Issue', status: 'Resolved', date: '2025-11-20', priority: 'High' },
-        { id: 2, subject: 'Question about annual plan approval', category: 'General Query', status: 'In Progress', date: '2025-11-22', priority: 'Medium' },
+        { id: 1, subject: 'DPR Upload Error', category: 'Technical Issue', status: 'Resolved', date: '2025-11-20', priority: 'High' },
     ]);
     const [toast, setToast] = useState(null);
     const [errors, setErrors] = useState({});
@@ -47,7 +46,7 @@ const HelpSupport = () => {
         };
 
         setTickets([newTicket, ...tickets]);
-        showToast('Support ticket submitted successfully! We will get back to you soon.');
+        showToast('Support ticket submitted successfully!');
         setFormData({
             subject: '',
             category: 'Technical Issue',
@@ -79,46 +78,28 @@ const HelpSupport = () => {
                     <div className="card" style={{ padding: 20 }}>
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to allocate funds to states?
+                                How to upload a DPR?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to the <strong>Fund Allocation</strong> panel from the sidebar, click on <strong>"+ Allocate Funds"</strong>, select the state and scheme component, enter the amount in Crores, and click Submit.
+                                Go to <strong>DPR Upload</strong>, click <strong>"+ Upload New DPR"</strong>, fill in the project details, attach the PDF file, and click Upload.
                             </p>
                         </details>
 
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to approve annual plans?
+                                How to update work order status?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Navigate to <strong>Annual Plans Approval</strong>, view the pending plans, review the details, and click <strong>"Approve"</strong> or <strong>"Reject"</strong> with appropriate comments.
-                            </p>
-                        </details>
-
-                        <details style={{ marginBottom: 15, cursor: 'pointer' }}>
-                            <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to add a new State Admin?
-                            </summary>
-                            <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to <strong>Manage State Admins</strong>, click <strong>"+ Add New Admin"</strong>, fill in the state name, admin details, username, password, and contact information, then click Save.
-                            </p>
-                        </details>
-
-                        <details style={{ marginBottom: 15, cursor: 'pointer' }}>
-                            <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to export reports as PDF?
-                            </summary>
-                            <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to <strong>Reports & Analytics</strong>, select the report type, and click <strong>"📥 Export Report"</strong>. A print dialog will open where you can save as PDF.
+                                Go to <strong>Work Orders</strong>, find the relevant order, and click <strong>"Update"</strong> to change the status or add progress details.
                             </p>
                         </details>
 
                         <details style={{ cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to track fund releases?
+                                How to export reports?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Navigate to <strong>Fund Released</strong> page to view all fund release records with state-wise breakdown, dates, and amounts.
+                                Go to <strong>Reports</strong>, select the report type (Execution or Financial), and click <strong>"📥 Export Report"</strong> to download as PDF.
                             </p>
                         </details>
                     </div>
@@ -152,8 +133,6 @@ const HelpSupport = () => {
                                         <option value="Technical Issue">Technical Issue</option>
                                         <option value="General Query">General Query</option>
                                         <option value="Feature Request">Feature Request</option>
-                                        <option value="Bug Report">Bug Report</option>
-                                        <option value="Account Issue">Account Issue</option>
                                     </select>
                                 </div>
 
@@ -167,7 +146,6 @@ const HelpSupport = () => {
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>
                                         <option value="High">High</option>
-                                        <option value="Urgent">Urgent</option>
                                     </select>
                                 </div>
                             </div>
@@ -190,7 +168,7 @@ const HelpSupport = () => {
                                     <input
                                         type="email"
                                         className="form-control"
-                                        placeholder="your.email@gov.in"
+                                        placeholder="your.email@dept.gov.in"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
@@ -240,12 +218,12 @@ const HelpSupport = () => {
                                     <td>{ticket.subject}</td>
                                     <td>{ticket.category}</td>
                                     <td>
-                                        <span className={`badge badge-${ticket.priority === 'High' || ticket.priority === 'Urgent' ? 'error' : ticket.priority === 'Medium' ? 'warning' : 'info'}`}>
+                                        <span className={`badge badge-${ticket.priority === 'High' ? 'error' : ticket.priority === 'Medium' ? 'warning' : 'info'}`}>
                                             {ticket.priority}
                                         </span>
                                     </td>
                                     <td>
-                                        <span className={`badge badge-${ticket.status === 'Resolved' ? 'success' : ticket.status === 'In Progress' ? 'warning' : 'info'}`}>
+                                        <span className={`badge badge-${ticket.status === 'Resolved' ? 'success' : 'warning'}`}>
                                             {ticket.status}
                                         </span>
                                     </td>
@@ -256,27 +234,8 @@ const HelpSupport = () => {
                     </table>
                 </div>
             </div>
-
-            {/* Contact Information */}
-            <div style={{ marginTop: 30, padding: 20, backgroundColor: '#f9f9f9', borderRadius: 8 }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: 15 }}>Contact Information</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-                    <div>
-                        <div style={{ fontWeight: 600, marginBottom: 5 }}>📧 Email Support</div>
-                        <div style={{ color: '#666' }}>support@pmajay.gov.in</div>
-                    </div>
-                    <div>
-                        <div style={{ fontWeight: 600, marginBottom: 5 }}>📞 Phone Support</div>
-                        <div style={{ color: '#666' }}>1800-XXX-XXXX (Toll Free)</div>
-                    </div>
-                    <div>
-                        <div style={{ fontWeight: 600, marginBottom: 5 }}>🕐 Support Hours</div>
-                        <div style={{ color: '#666' }}>Mon-Fri: 9:00 AM - 6:00 PM</div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };
 
-export default HelpSupport;
+export default DepartmentHelp;

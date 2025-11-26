@@ -260,27 +260,32 @@ const FundReleased = ({ formatCurrency }) => {
                     </div>
                 }
             >
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
                     <div className="form-group">
-                        <label className="form-label">State/UT</label>
+                        <label className="form-label">State Name</label>
                         <select
                             className="form-control"
                             value={formData.stateName}
                             onChange={(e) => setFormData({ ...formData, stateName: e.target.value })}
                         >
-                            <option value="">-- Select State --</option>
+                            <option value="">-- select state / UT --</option>
                             {INDIA_STATES_AND_UT.map((s) => (
                                 <option key={s} value={s}>{s}</option>
                             ))}
                         </select>
                         {errors.stateName && <div className="form-error">{errors.stateName}</div>}
-
-
+                        {formData.stateName && availableFunds !== null && (
+                            <div className="form-helper" style={{ marginTop: 8 }}>
+                                <strong style={{ color: availableFunds > 0 ? '#2ecc71' : '#e74c3c' }}>
+                                    Available Balance: {formatCurrency ? formatCurrency(availableFunds) : availableFunds}
+                                </strong>
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="form-label">Scheme Component</label>
-                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', gap: 12 }}>
                             <label><input type="checkbox" value="Adarsh Gram" onChange={handleComponentChange} /> Adarsh Gram</label>
                             <label><input type="checkbox" value="GIA" onChange={handleComponentChange} /> GIA</label>
                             <label><input type="checkbox" value="Hostel" onChange={handleComponentChange} /> Hostel</label>
@@ -293,18 +298,16 @@ const FundReleased = ({ formatCurrency }) => {
                             <label className="form-label">Amount to Release (in Cr)</label>
                             <input
                                 type="number"
-                                className="form-control"
+                                inputMode="decimal"
+                                pattern="[0-9]*[.,]?[0-9]*"
+                                className="form-control no-spin"
                                 placeholder="e.g. 0.5"
                                 value={formData.amount}
                                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                                style={{ padding: '10px' }}
                             />
                             {errors.amount && <div className="form-error">{errors.amount}</div>}
-                            {formData.stateName && (
-                                <div style={{ marginTop: 8, fontSize: '0.9rem', color: availableFunds > 0 ? '#2ecc71' : '#e74c3c' }}>
-                                    <strong>Remaining Amount: </strong>
-                                    {formatCurrency ? formatCurrency(availableFunds) : availableFunds}
-                                </div>
-                            )}
+                            <div className="form-helper">Enter numeric value (decimals allowed)</div>
                         </div>
 
                         <div className="form-group">
@@ -320,7 +323,7 @@ const FundReleased = ({ formatCurrency }) => {
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Officer ID</label>
+                        <label className="form-label">Release Officer ID</label>
                         <input
                             type="text"
                             className="form-control"
@@ -340,6 +343,11 @@ const FundReleased = ({ formatCurrency }) => {
                             value={formData.remarks}
                             onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
                         />
+                        <div className="form-helper">Add any additional notes or reference information</div>
+                    </div>
+
+                    <div style={{ fontSize: 13, color: '#555' }}>
+                        <strong>Note:</strong> Ensure the amount does not exceed the available balance for the selected state.
                     </div>
                 </div>
             </Modal>

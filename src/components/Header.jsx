@@ -38,24 +38,20 @@ const Header = () => {
 
         const roleSpecificLinks = {
             [ROLES.MINISTRY]: [
-                { path: '/reports', label: 'Reports' },
-                { path: '/fund-allocation', label: 'Fund Allocation' }
+                // Reports and Fund Allocation removed - accessible via sidebar
             ],
             [ROLES.STATE]: [
-                { path: '/districts', label: 'Districts' },
-                { path: '/fund-release', label: 'Fund Release' }
+                // Districts and Fund Release removed - accessible via sidebar
             ],
             [ROLES.DISTRICT]: [
-                { path: '/proposals', label: 'Proposals' },
-                { path: '/works', label: 'Works Management' }
+                // Proposals and Works Management removed - accessible via sidebar
             ],
             [ROLES.GP]: [
                 { path: '/my-projects', label: 'My Projects' },
                 { path: '/new-proposal', label: 'New Proposal' }
             ],
             [ROLES.DEPARTMENT]: [
-                { path: '/work-orders', label: 'Work Orders' },
-                { path: '/dpr-upload', label: 'DPR Upload' }
+                // Work Orders and DPR Upload removed - accessible via sidebar
             ],
             [ROLES.CONTRACTOR]: [
                 { path: '/assigned-works', label: 'Assigned Works' },

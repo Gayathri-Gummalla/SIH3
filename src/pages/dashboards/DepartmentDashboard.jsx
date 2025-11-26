@@ -1,25 +1,121 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import StatCard from '../../components/StatCard';
 import NotificationBell from '../../components/NotificationBell';
 import DashboardSidebar from '../../components/DashboardSidebar';
 import { useAuth } from '../../contexts/AuthContext';
+import DepartmentDashboardPanel from './department/DepartmentDashboardPanel';
+import WorkOrders from './department/WorkOrders';
+import DPRUpload from './department/DPRUpload';
+import DepartmentReports from './department/DepartmentReports';
+import DepartmentNotifications from './department/DepartmentNotifications';
+import DepartmentHelp from './department/DepartmentHelp';
+import { mockProjects } from '../../data/mockData';
 
 const DepartmentDashboard = () => {
+    const [activeTab, setActiveTab] = useState('dashboard');
     const navigate = useNavigate();
     const { logout } = useAuth();
 
+    // --- Lifted State ---
+
+    // Projects (Initialize with mock data filtered for department)
+    const [projects, setProjects] = useState(
+        mockProjects.filter(p => p.component === 'Infrastructure' || p.component === 'Adarsh Gram')
+    );
+
+    // Work Orders (Initialize with sample data from WorkOrders.jsx)
+    const [workOrders, setWorkOrders] = useState([
+        { id: 101, title: 'Construction of Community Hall', location: 'Shirur GP', contractor: 'M/s Patil Constructions', amount: '0.45 Cr', date: '2025-11-10', status: 'In Progress', deadline: '2026-05-10' },
+        { id: 102, title: 'Road Upgradation (Phase 1)', location: 'Khed GP', contractor: 'M/s Deshmukh Infra', amount: '0.75 Cr', date: '2025-11-15', status: 'Not Started', deadline: '2026-04-15' },
+        { id: 103, title: 'Solar Street Light Installation', location: 'Baramati GP', contractor: 'SolarTech Solutions', amount: '0.25 Cr', date: '2025-11-05', status: 'Completed', deadline: '2025-12-05' },
+    ]);
+
+    // DPRs (Initialize with sample data from DPRUpload.jsx)
+    const [dprs, setDprs] = useState([
+        { id: 1, title: 'New Community Center', location: 'Shirur GP', estimatedCost: '0.50 Cr', date: '2025-11-20', status: 'Submitted', file: 'dpr_shirur_cc.pdf' },
+        { id: 2, title: 'Village Road Phase 2', location: 'Khed GP', estimatedCost: '0.80 Cr', date: '2025-11-18', status: 'Draft', file: 'dpr_khed_road.pdf' },
+    ]);
+
+    // --- Handlers ---
+
+    const handleAddDPR = (newDPR) => {
+        setDprs([newDPR, ...dprs]);
+    };
+
+    const handleUpdateWorkOrder = (updatedOrder) => {
+        setWorkOrders(workOrders.map(o => o.id === updatedOrder.id ? updatedOrder : o));
+    };
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+    };
+
+    // Calculate Stats for Dashboard Panel
+    const stats = {
+        totalWorks: workOrders.length,
+        ongoing: workOrders.filter(o => o.status === 'In Progress').length,
+        completed: workOrders.filter(o => o.status === 'Completed').length,
+        pendingDPR: dprs.filter(d => d.status === 'Draft' || d.status === 'Submitted').length,
+        fundsAllocated: 150000000, // Static for now
+        fundsUtilized: 85000000 // Static for now
+    };
+
     const sidebarMenu = [
-        { icon: '📊', label: 'Dashboard', path: '/dashboard' },
-        { icon: '📋', label: 'Work Orders', path: '#' },
-        { icon: '📄', label: 'DPR Uploads', path: '#' },
-        { icon: '⏱️', label: 'Timelines & Milestones', path: '#' },
-        { icon: '✅', label: 'Quality Checks', path: '#' },
-        { icon: '💰', label: 'Invoice Approvals', path: '#' },
-        { icon: '📊', label: 'Reports', path: '#' },
-        { icon: '🔔', label: 'Notifications', path: '#' },
+        { icon: '📊', label: 'Dashboard', action: () => setActiveTab('dashboard'), active: activeTab === 'dashboard' },
+        { icon: '📋', label: 'Work Orders', action: () => setActiveTab('work-orders'), active: activeTab === 'work-orders' },
+        { icon: '📤', label: 'DPR Upload', action: () => setActiveTab('dpr-upload'), active: activeTab === 'dpr-upload' },
+        { icon: '📊', label: 'Reports', action: () => setActiveTab('reports'), active: activeTab === 'reports' },
+        { icon: '🔔', label: 'Notifications', action: () => setActiveTab('notifications'), active: activeTab === 'notifications' },
+        { icon: '❓', label: 'Help', action: () => setActiveTab('help'), active: activeTab === 'help' },
         { icon: '🚪', label: 'Logout', action: () => { logout(); navigate('/login'); } }
     ];
+
+    const formatCurrency = (amount) => {
+        return `₹${(amount / 10000000).toFixed(2)} Cr`;
+    };
+
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'dashboard':
+                return <DepartmentDashboardPanel
+                    formatCurrency={formatCurrency}
+                    stats={stats}
+                    recentOrders={workOrders.slice(0, 3)}
+                    projects={projects}
+                    onNavigate={handleTabChange}
+                />;
+            case 'work-orders':
+                return <WorkOrders
+                    orders={workOrders}
+                    onUpdateOrder={handleUpdateWorkOrder}
+                />;
+            case 'dpr-upload':
+                return <DPRUpload
+                    dprs={dprs}
+                    onAddDPR={handleAddDPR}
+                />;
+            case 'reports':
+                return <DepartmentReports />;
+            case 'notifications':
+                return <DepartmentNotifications />;
+            case 'help':
+                return <DepartmentHelp />;
+            default:
+                return <DepartmentDashboardPanel formatCurrency={formatCurrency} stats={stats} recentOrders={workOrders.slice(0, 3)} projects={projects} onNavigate={handleTabChange} />;
+        }
+    };
+
+    const getBreadcrumb = () => {
+        const labels = {
+            'dashboard': 'Dashboard',
+            'work-orders': 'Work Orders',
+            'dpr-upload': 'DPR Upload',
+            'reports': 'Reports',
+            'notifications': 'Notifications',
+            'help': 'Help'
+        };
+        return `Home > ${labels[activeTab] || 'Dashboard'}`;
+    };
 
     return (
         <div className="dashboard-layout">
@@ -28,143 +124,17 @@ const DepartmentDashboard = () => {
             <main className="dashboard-main">
                 <div className="dashboard-header">
                     <div className="dashboard-title-section">
-                        <h1>Department Dashboard</h1>
-                        <p>Public Works Department - Pune District</p>
+                        <h1>Department Dashboard - PWD</h1>
+                        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-1)' }}>
+                            {getBreadcrumb()}
+                        </p>
                     </div>
                     <div className="dashboard-actions">
                         <NotificationBell />
                     </div>
                 </div>
 
-                {/* KPIs */}
-                <div className="kpi-row">
-                    <StatCard icon="📋" value="25" label="Projects Assigned" color="var(--color-primary)" />
-                    <StatCard icon="📄" value="18" label="DPRs Submitted" color="var(--color-secondary)" />
-                    <StatCard icon="✅" value="5" label="Pending Quality Checks" color="var(--color-warning)" />
-                    <StatCard icon="💰" value="12" label="Invoices Approved" color="var(--color-success)" />
-                </div>
-
-                {/* Work Orders List */}
-                <div className="dashboard-section">
-                    <div className="section-header">
-                        <h2 className="section-title">Assigned Work Orders</h2>
-                        <button className="btn btn-primary btn-sm">📥 Download All</button>
-                    </div>
-
-                    <div className="work-order-card">
-                        <div className="work-order-header">
-                            <div>
-                                <h4 className="work-order-title">Community Hall Construction - Shirur</h4>
-                                <div className="work-order-meta">
-                                    <span>📅 Assigned: Jan 15, 2024</span>
-                                    <span>💰 Budget: ₹50 Lakhs</span>
-                                    <span>📍 Shirur GP</span>
-                                </div>
-                            </div>
-                            <span className="badge badge-warning">DPR PENDING</span>
-                        </div>
-                        <div className="work-order-actions">
-                            <button className="btn btn-primary btn-sm">📄 Upload DPR</button>
-                            <button className="btn btn-secondary btn-sm">View Details</button>
-                        </div>
-                    </div>
-
-                    <div className="work-order-card">
-                        <div className="work-order-header">
-                            <div>
-                                <h4 className="work-order-title">Road Construction - Junnar</h4>
-                                <div className="work-order-meta">
-                                    <span>📅 Assigned: Feb 1, 2024</span>
-                                    <span>💰 Budget: ₹60 Lakhs</span>
-                                    <span>📍 Junnar GP</span>
-                                </div>
-                            </div>
-                            <span className="badge badge-success">DPR APPROVED</span>
-                        </div>
-                        <div className="work-order-actions">
-                            <button className="btn btn-primary btn-sm">👷 Assign Contractor</button>
-                            <button className="btn btn-secondary btn-sm">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* DPR Upload Section */}
-                <div className="form-section">
-                    <div className="form-section-header">
-                        <h3 className="form-section-title">Upload Detailed Project Report (DPR)</h3>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label required">Select Project</label>
-                        <select className="form-control form-select">
-                            <option>Community Hall Construction - Shirur</option>
-                            <option>Road Construction - Junnar</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label">Upload DPR Document</label>
-                        <div className="upload-area">
-                            <div className="upload-area-icon">📄</div>
-                            <div className="upload-area-text">Upload DPR (PDF)</div>
-                            <div className="upload-area-hint">Technical drawings, cost estimates, timelines</div>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label required">Expected Completion Date</label>
-                        <input type="date" className="form-control" />
-                    </div>
-
-                    <button className="btn btn-primary">Submit DPR</button>
-                </div>
-
-                {/* Invoice Approvals */}
-                <div className="dashboard-section">
-                    <div className="section-header">
-                        <h2 className="section-title">Contractor Invoice Approvals</h2>
-                        <span className="badge badge-warning" style={{ fontSize: 'var(--text-base)', padding: 'var(--space-2) var(--space-4)' }}>
-                            3 Pending
-                        </span>
-                    </div>
-
-                    <div className="invoice-card">
-                        <div className="invoice-header">
-                            <div>
-                                <div className="invoice-number">INV-2024-001</div>
-                                <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                                    ABC Construction Pvt Ltd
-                                </p>
-                            </div>
-                            <div className="invoice-amount">₹12,50,000</div>
-                        </div>
-                        <div className="invoice-details">
-                            <div>
-                                <div className="invoice-detail-label">Project</div>
-                                <div className="invoice-detail-value">Community Hall - Shirur</div>
-                            </div>
-                            <div>
-                                <div className="invoice-detail-label">Work Completed</div>
-                                <div className="invoice-detail-value">65%</div>
-                            </div>
-                            <div>
-                                <div className="invoice-detail-label">Submitted</div>
-                                <div className="invoice-detail-value">Nov 20, 2025</div>
-                            </div>
-                            <div>
-                                <div className="invoice-detail-label">Status</div>
-                                <div className="invoice-detail-value">
-                                    <span className="badge badge-warning">PENDING APPROVAL</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-                            <button className="btn btn-primary btn-sm">✅ Approve</button>
-                            <button className="btn btn-outline btn-sm">❌ Reject</button>
-                            <button className="btn btn-secondary btn-sm">📄 View Invoice</button>
-                        </div>
-                    </div>
-                </div>
+                {renderContent()}
             </main>
         </div>
     );

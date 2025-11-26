@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const HelpSupport = () => {
+const DistrictHelp = () => {
     const [formData, setFormData] = useState({
         subject: '',
         category: 'Technical Issue',
@@ -10,8 +10,8 @@ const HelpSupport = () => {
         phone: ''
     });
     const [tickets, setTickets] = useState([
-        { id: 1, subject: 'Unable to allocate funds', category: 'Technical Issue', status: 'Resolved', date: '2025-11-20', priority: 'High' },
-        { id: 2, subject: 'Question about annual plan approval', category: 'General Query', status: 'In Progress', date: '2025-11-22', priority: 'Medium' },
+        { id: 1, subject: 'Issue with fund release to Shirur GP', category: 'Technical Issue', status: 'Resolved', date: '2025-11-20', priority: 'High' },
+        { id: 2, subject: 'Clarification on UC format', category: 'General Query', status: 'In Progress', date: '2025-11-22', priority: 'Medium' },
     ]);
     const [toast, setToast] = useState(null);
     const [errors, setErrors] = useState({});
@@ -79,46 +79,46 @@ const HelpSupport = () => {
                     <div className="card" style={{ padding: 20 }}>
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to allocate funds to states?
+                                How to release funds to Gram Panchayats?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to the <strong>Fund Allocation</strong> panel from the sidebar, click on <strong>"+ Allocate Funds"</strong>, select the state and scheme component, enter the amount in Crores, and click Submit.
+                                Go to <strong>Fund Release to GPs</strong>, click <strong>"+ Release New Funds"</strong>, select the GP and scheme component, enter the amount, officer ID, and click Confirm Release.
                             </p>
                         </details>
 
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to approve annual plans?
+                                How to approve GP proposals?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Navigate to <strong>Annual Plans Approval</strong>, view the pending plans, review the details, and click <strong>"Approve"</strong> or <strong>"Reject"</strong> with appropriate comments.
+                                Navigate to <strong>Approve GP Proposals</strong>, filter by status if needed, click <strong>"View"</strong> to see details, then click <strong>"Approve"</strong> or <strong>"Reject"</strong> with appropriate reason.
                             </p>
                         </details>
 
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to add a new State Admin?
+                                How to add a new GP Admin?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to <strong>Manage State Admins</strong>, click <strong>"+ Add New Admin"</strong>, fill in the state name, admin details, username, password, and contact information, then click Save.
+                                Go to <strong>Manage GP Admins</strong>, click <strong>"+ Add New Admin"</strong>, select the GP, fill in admin details, username, password, and contact information, then click Save.
                             </p>
                         </details>
 
                         <details style={{ marginBottom: 15, cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to export reports as PDF?
+                                How to upload Utilization Certificates?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Go to <strong>Reports & Analytics</strong>, select the report type, and click <strong>"📥 Export Report"</strong>. A print dialog will open where you can save as PDF.
+                                Go to <strong>Upload Utilisation Certificates</strong>, click <strong>"+ Upload New UC"</strong>, select the GP and component, choose the file, and click Upload.
                             </p>
                         </details>
 
                         <details style={{ cursor: 'pointer' }}>
                             <summary style={{ fontWeight: 600, padding: '10px', backgroundColor: '#f9f9f9', borderRadius: 6 }}>
-                                How to track fund releases?
+                                How to export reports as PDF?
                             </summary>
                             <p style={{ marginTop: 10, color: '#666', paddingLeft: 10, lineHeight: 1.6 }}>
-                                Navigate to <strong>Fund Released</strong> page to view all fund release records with state-wise breakdown, dates, and amounts.
+                                Go to <strong>Reports</strong>, select the report type (Financial, Progress, or UC Status), and click <strong>"📥 Export Report"</strong>. A print dialog will open where you can save as PDF.
                             </p>
                         </details>
                     </div>
@@ -190,7 +190,7 @@ const HelpSupport = () => {
                                     <input
                                         type="email"
                                         className="form-control"
-                                        placeholder="your.email@gov.in"
+                                        placeholder="your.email@pune.gov.in"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
@@ -279,4 +279,4 @@ const HelpSupport = () => {
     );
 };
 
-export default HelpSupport;
+export default DistrictHelp;

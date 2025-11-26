@@ -159,6 +159,8 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body {
@@ -168,12 +170,15 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-secondary);
   min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 /* ===================================
@@ -1525,12 +1530,5 @@ textarea.form-control {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   padding: 20px;
-  max-height: 85vh;
-  overflow-y: auto !important;
   display: block;
-}
-
-.modal-body {
-  max-height: 70vh;
-  overflow-y: auto;
 }
