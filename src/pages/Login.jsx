@@ -1,26 +1,54 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, ROLES } from '../contexts/AuthContext';
+import { useAuth, ROLE_NAMES } from '../contexts/AuthContext';
 
 const Login = () => {
-    const [selectedRole, setSelectedRole] = useState('ministry');
+    const [email, setEmail] = useState('admin@mosje.gov.in');
+    const [password, setPassword] = useState('Admin@123');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const roles = [
-        { value: 'ministry', label: 'Ministry Admin (MoSJE)', icon: '🏛️' },
-        { value: 'state', label: 'State Admin (SSWD)', icon: '🏢' },
-        { value: 'district', label: 'District Admin', icon: '🏘️' },
-        { value: 'gp', label: 'Gram Panchayat Officer', icon: '🏡' },
-        { value: 'department', label: 'Implementing Department', icon: '🏗️' },
-        { value: 'contractor', label: 'Executing Agency/Contractor', icon: '👷' },
-        { value: 'public', label: 'Public/Beneficiary', icon: '👤' }
+    // Predefined demo accounts for quick access
+    const demoAccounts = [
+        { email: 'admin@mosje.gov.in', password: 'Admin@123', label: 'Central Admin', icon: '🏛️' },
+        { email: 'finance@mosje.gov.in', password: 'Finance@123', label: 'Central Finance', icon: '💰' },
+        { email: 'nodal.maharashtra@gov.in', password: 'Nodal@123', label: 'State Nodal (MH)', icon: '🏢' },
+        { email: 'finance.maharashtra@gov.in', password: 'Finance@123', label: 'State Finance (MH)', icon: '💵' },
+        { email: 'do.pune@gov.in', password: 'District@123', label: 'District Officer', icon: '🏘️' },
+        { email: 'ia.pune@gov.in', password: 'Agency@123', label: 'Implementing Agency', icon: '🏗️' },
+        { email: 'ea.abc@construction.com', password: 'Agency@123', label: 'Executing Agency', icon: '👷' },
+        { email: 'auditor@mosje.gov.in', password: 'Auditor@123', label: 'Auditor', icon: '📊' }
     ];
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        const user = login({ role: selectedRole });
-        navigate('/dashboard');
+        setError('');
+        setIsLoading(true);
+
+        try {
+            const result = await login(email, password);
+            
+            if (result.success) {
+                // Login successful, navigate to dashboard
+                setTimeout(() => {
+                    navigate('/dashboard', { replace: true });
+                }, 100);
+            } else {
+                setError(result.message || 'Login failed. Please check your credentials.');
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            setError('An error occurred. Please check if the backend server is running on port 5000.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDemoLogin = (demoEmail, demoPassword) => {
+        setEmail(demoEmail);
+        setPassword(demoPassword);
     };
 
     return (
@@ -32,50 +60,82 @@ const Login = () => {
                     <p className="login-subtitle">Ministry of Social Justice & Empowerment</p>
                 </div>
 
+                {error && (
+                    <div style={{
+                        padding: 'var(--space-3)',
+                        marginBottom: 'var(--space-4)',
+                        backgroundColor: 'var(--color-danger-light)',
+                        color: 'var(--color-danger)',
+                        borderRadius: 'var(--radius-md)',
+                        border: '1px solid var(--color-danger)'
+                    }}>
+                        {error}
+                    </div>
+                )}
+
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label className="form-label required">Select Your Role</label>
-                        <select
-                            className="form-control form-select"
-                            value={selectedRole}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                            required
-                        >
-                            {roles.map(role => (
-                                <option key={role.value} value={role.value}>
-                                    {role.icon} {role.label}
-                                </option>
-                            ))}
-                        </select>
-                        <p className="form-helper">
-                            This is a demonstration portal. Select your role to access the respective dashboard.
-                        </p>
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label">Email / Username</label>
+                        <label className="form-label required">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             className="form-control"
-                            placeholder="Enter your email or username"
-                            defaultValue="demo@pmajay.gov.in"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            disabled={isLoading}
                         />
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Password</label>
+                        <label className="form-label required">Password</label>
                         <input
                             type="password"
                             className="form-control"
                             placeholder="Enter your password"
-                            defaultValue="demo123"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            disabled={isLoading}
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-4)' }}>
-                        Login to Dashboard
+                    <button 
+                        type="submit" 
+                        className="btn btn-primary" 
+                        style={{ width: '100%', marginTop: 'var(--space-4)' }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Logging in...' : 'Login to Dashboard'}
                     </button>
                 </form>
+
+                <div style={{ marginTop: 'var(--space-6)' }}>
+                    <p style={{ textAlign: 'center', marginBottom: 'var(--space-3)', fontWeight: 'bold', color: 'var(--color-text-secondary)' }}>
+                        Quick Demo Login
+                    </p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-2)' }}>
+                        {demoAccounts.map((account, index) => (
+                            <button
+                                key={index}
+                                type="button"
+                                className="btn btn-secondary"
+                                style={{ 
+                                    fontSize: 'var(--text-xs)', 
+                                    padding: 'var(--space-2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 'var(--space-1)'
+                                }}
+                                onClick={() => handleDemoLogin(account.email, account.password)}
+                                disabled={isLoading}
+                            >
+                                <span>{account.icon}</span>
+                                <span>{account.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 <div style={{ marginTop: 'var(--space-6)', textAlign: 'center' }}>
                     <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>

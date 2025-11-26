@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import StatCard from '../../components/StatCard';
 import NotificationBell from '../../components/NotificationBell';
 import DashboardSidebar from '../../components/DashboardSidebar';
-import IndiaMap from '../../components/maps/IndiaMap';
+// import IndiaMap from '../../components/maps/IndiaMap'; // Temporarily disabled - React Leaflet compatibility issue
 import { nationalStats, states } from '../../data/mockData';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -115,7 +115,13 @@ const MinistryDashboard = () => {
                         <h2 className="section-title">State-wise Project Distribution</h2>
                         <button className="btn btn-primary btn-sm">📥 Export Map Data</button>
                     </div>
-                    <IndiaMap onStateSelect={setSelectedState} />
+                    <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--color-bg-secondary)', borderRadius: '8px' }}>
+                        <p>🗺️ Interactive map will be enabled soon</p>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginTop: '0.5rem' }}>
+                            Map component temporarily disabled due to library compatibility issues
+                        </p>
+                    </div>
+                    {/* <IndiaMap onStateSelect={setSelectedState} /> */}
                 </div>
 
                 {/* Fund Allocation Table */}

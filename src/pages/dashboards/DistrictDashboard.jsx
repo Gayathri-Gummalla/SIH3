@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import StatCard from '../../components/StatCard';
 import NotificationBell from '../../components/NotificationBell';
 import DashboardSidebar from '../../components/DashboardSidebar';
-import DistrictMap from '../../components/maps/DistrictMap';
+// import DistrictMap from '../../components/maps/DistrictMap'; // Temporarily disabled - React Leaflet compatibility issue
 import { districtStats, mockProjects } from '../../data/mockData';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -92,7 +92,13 @@ const DistrictDashboard = () => {
                         <h2 className="section-title">Project Locations (GIS View)</h2>
                         <button className="btn btn-primary btn-sm">📍 Add New Location</button>
                     </div>
-                    <DistrictMap state="Maharashtra" />
+                    <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--color-bg-secondary)', borderRadius: '8px' }}>
+                        <p>🗺️ District map will be enabled soon</p>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginTop: '0.5rem' }}>
+                            Map component temporarily disabled due to library compatibility issues
+                        </p>
+                    </div>
+                    {/* <DistrictMap state="Maharashtra" /> */}
                 </div>
 
                 {/* GP Proposals Pending */}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import IndiaMap from '../../components/maps/IndiaMap';
-import DistrictMap from '../../components/maps/DistrictMap';
+// import IndiaMap from '../../components/maps/IndiaMap'; // Temporarily disabled - React Leaflet compatibility issue
+// import DistrictMap from '../../components/maps/DistrictMap'; // Temporarily disabled - React Leaflet compatibility issue
 import { mockProjects } from '../../data/mockData';
 
 const PublicDashboard = () => {
@@ -70,9 +70,15 @@ const PublicDashboard = () => {
                             </h2>
                         </div>
 
-                        {viewMode === 'india' && <IndiaMap onStateSelect={handleStateSelect} />}
+                        <div style={{ padding: '2rem', textAlign: 'center', background: 'var(--color-bg-secondary)', borderRadius: '8px' }}>
+                            <p>🗺️ Interactive map will be enabled soon</p>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginTop: '0.5rem' }}>
+                                Map component temporarily disabled due to library compatibility issues
+                            </p>
+                        </div>
+                        {/* {viewMode === 'india' && <IndiaMap onStateSelect={handleStateSelect} />}
                         {viewMode === 'state' && <DistrictMap state={selectedState} onDistrictSelect={handleDistrictSelect} />}
-                        {viewMode === 'district' && <DistrictMap state={selectedState} />}
+                        {viewMode === 'district' && <DistrictMap state={selectedState} />} */}
                     </div>
 
                     {/* Project List */}

@@ -4,7 +4,6 @@ import { useAuth, ROLES } from '../../contexts/AuthContext';
 import MinistryDashboard from './MinistryDashboard';
 import StateDashboard from './StateDashboard';
 import DistrictDashboard from './DistrictDashboard';
-import GPDashboard from './GPDashboard';
 import DepartmentDashboard from './DepartmentDashboard';
 import ContractorDashboard from './ContractorDashboard';
 import PublicDashboard from './PublicDashboard';
@@ -16,30 +15,29 @@ const DashboardRouter = () => {
         return <Navigate to="/login" replace />;
     }
 
+    // Map backend roles to dashboard components
     switch (user.role) {
-        case ROLES.MINISTRY:
+        case ROLES.CENTRAL_ADMIN:
+        case ROLES.CENTRAL_FINANCE:
+        case ROLES.AUDITOR:
             return <MinistryDashboard />;
 
-        case ROLES.STATE:
+        case ROLES.STATE_NODAL:
+        case ROLES.STATE_FINANCE:
             return <StateDashboard />;
 
-        case ROLES.DISTRICT:
+        case ROLES.DISTRICT_OFFICER:
             return <DistrictDashboard />;
 
-        case ROLES.GP:
-            return <GPDashboard />;
-
-        case ROLES.DEPARTMENT:
+        case ROLES.IMPLEMENTING_AGENCY:
             return <DepartmentDashboard />;
 
-        case ROLES.CONTRACTOR:
+        case ROLES.EXECUTING_AGENCY:
             return <ContractorDashboard />;
 
-        case ROLES.PUBLIC:
-            return <PublicDashboard />;
-
         default:
-            return <Navigate to="/login" replace />;
+            // Fallback to public dashboard
+            return <PublicDashboard />;
     }
 };
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import { indiaGeoJSON } from '../../data/geoData';
 import { states } from '../../data/mockData';
 import 'leaflet/dist/leaflet.css';
@@ -12,6 +12,22 @@ L.Icon.Default.mergeOptions({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
+
+// Map content component
+const MapContent = ({ onEachState }) => {
+    return (
+        <>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <GeoJSON
+                data={indiaGeoJSON}
+                onEachFeature={onEachState}
+            />
+        </>
+    );
+};
 
 const IndiaMap = ({ onStateSelect }) => {
     const [selectedState, setSelectedState] = useState(null);
@@ -94,15 +110,7 @@ const IndiaMap = ({ onStateSelect }) => {
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={true}
             >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-
-                <GeoJSON
-                    data={indiaGeoJSON}
-                    onEachFeature={onEachState}
-                />
+                <MapContent onEachState={onEachState} />
             </MapContainer>
 
             {/* Legend */}

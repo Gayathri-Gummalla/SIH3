@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IndiaMap from '../components/maps/IndiaMap';
+// import IndiaMap from '../components/maps/IndiaMap'; // Temporarily disabled
 import StatCard from '../components/StatCard';
 import { nationalStats, schemeComponents } from '../data/mockData';
 
@@ -127,16 +127,31 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* Interactive Map */}
+                    {/* Interactive Map - Temporarily disabled */}
                     <div className="dashboard-section">
                         <div className="section-header">
                             <h2 className="section-title">Interactive State Map</h2>
                             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0 }}>
-                                Click on any state to view district-level details
+                                State-wise project visualization
                             </p>
                         </div>
 
-                        <IndiaMap onStateSelect={handleStateSelect} />
+                        <div style={{
+                            height: '600px',
+                            borderRadius: 'var(--radius-lg)',
+                            overflow: 'hidden',
+                            boxShadow: 'var(--shadow-lg)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'var(--color-bg-secondary)'
+                        }}>
+                            <div style={{ textAlign: 'center', padding: '40px' }}>
+                                <h3 style={{ marginBottom: '16px', color: 'var(--color-text-secondary)' }}>🗺️ Interactive Map</h3>
+                                <p style={{ color: 'var(--color-text-tertiary)' }}>Map component will be enabled after login</p>
+                            </div>
+                        </div>
+                        {/* <IndiaMap onStateSelect={handleStateSelect} /> */}
 
                         {selectedState && (
                             <div className="alert alert-info" style={{ marginTop: 'var(--space-4)' }}>

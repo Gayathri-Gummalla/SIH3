@@ -5,6 +5,66 @@ import { districts, mockProjects } from '../../data/mockData';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Map content component
+const MapContent = ({ onEachDistrict, showProjects, stateProjects, getProjectIcon }) => {
+    return (
+        <>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <GeoJSON
+                data={maharashtraDistrictsGeoJSON}
+                onEachFeature={onEachDistrict}
+            />
+            {showProjects && stateProjects.map(project => (
+                <Marker
+                    key={project.id}
+                    position={project.coordinates}
+                    icon={getProjectIcon(project.component)}
+                >
+                    <Popup>
+                        <div style={{ fontFamily: 'var(--font-primary)', minWidth: '250px' }}>
+                            <h3 style={{ margin: '0 0 8px 0', color: 'var(--color-navy)', fontSize: '14px' }}>
+                                {project.name}
+                            </h3>
+                            <div style={{ fontSize: '12px' }}>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Component:</strong> {project.component}
+                                </p>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Status:</strong>
+                                    <span className={`badge badge-${project.status.toLowerCase()}`} style={{ marginLeft: '4px' }}>
+                                        {project.status}
+                                    </span>
+                                </p>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Progress:</strong> {project.progress}%
+                                </p>
+                                <div className="progress-bar" style={{ margin: '8px 0' }}>
+                                    <div className="progress-fill" style={{ width: `${project.progress}%` }}></div>
+                                </div>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Fund Allocated:</strong> ₹{(project.fundAllocated / 100000).toFixed(2)} L
+                                </p>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Department:</strong> {project.department}
+                                </p>
+                                <p style={{ margin: '4px 0' }}>
+                                    <strong>Agency:</strong> {project.agency}
+                                </p>
+                                <p style={{ margin: '4px 0', fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                                    Last Updated: {project.lastUpdate}
+                                </p>
+                            </div>
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
+        </>
+    );
+};
+
 const DistrictMap = ({ state = 'Maharashtra', onDistrictSelect }) => {
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [showProjects, setShowProjects] = useState(true);
@@ -108,61 +168,12 @@ const DistrictMap = ({ state = 'Maharashtra', onDistrictSelect }) => {
                 style={{ height: '100%', width: '100%' }}
                 scrollWheelZoom={true}
             >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                <MapContent 
+                    onEachDistrict={onEachDistrict}
+                    showProjects={showProjects}
+                    stateProjects={stateProjects}
+                    getProjectIcon={getProjectIcon}
                 />
-
-                <GeoJSON
-                    data={maharashtraDistrictsGeoJSON}
-                    onEachFeature={onEachDistrict}
-                />
-
-                {/* Project Markers */}
-                {showProjects && stateProjects.map(project => (
-                    <Marker
-                        key={project.id}
-                        position={project.coordinates}
-                        icon={getProjectIcon(project.component)}
-                    >
-                        <Popup>
-                            <div style={{ fontFamily: 'var(--font-primary)', minWidth: '250px' }}>
-                                <h3 style={{ margin: '0 0 8px 0', color: 'var(--color-navy)', fontSize: '14px' }}>
-                                    {project.name}
-                                </h3>
-                                <div style={{ fontSize: '12px' }}>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Component:</strong> {project.component}
-                                    </p>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Status:</strong>
-                                        <span className={`badge badge-${project.status.toLowerCase()}`} style={{ marginLeft: '4px' }}>
-                                            {project.status}
-                                        </span>
-                                    </p>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Progress:</strong> {project.progress}%
-                                    </p>
-                                    <div className="progress-bar" style={{ margin: '8px 0' }}>
-                                        <div className="progress-fill" style={{ width: `${project.progress}%` }}></div>
-                                    </div>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Fund Allocated:</strong> ₹{(project.fundAllocated / 100000).toFixed(2)} L
-                                    </p>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Department:</strong> {project.department}
-                                    </p>
-                                    <p style={{ margin: '4px 0' }}>
-                                        <strong>Agency:</strong> {project.agency}
-                                    </p>
-                                    <p style={{ margin: '4px 0', fontSize: '11px', color: 'var(--text-tertiary)' }}>
-                                        Last Updated: {project.lastUpdate}
-                                    </p>
-                                </div>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
             </MapContainer>
 
             {/* Controls */}
